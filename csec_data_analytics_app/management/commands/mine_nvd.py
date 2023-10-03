@@ -6,5 +6,5 @@ class Command(BaseCommand):
     help = 'Describes what your command does.'
 
     def handle(self, *args, **kwargs):
-        nvd_client = NVDClient()
+        nvd_client = NVDClient(delete_existing=True)
         nvd_client.run()

@@ -17,11 +17,12 @@ In this project you will extract data from the National Vulnerability Database a
      - Vulnerability description
      - CPE Configurations
      - CWEs
+     - CISA's Exploitability metric
      - All CVSS attributes
    - Each distinct vulnerability will be a single document.
 
 3. **Extract a Year of NVD Vulnerability Data**: 
-   - Develop a utility class to connect to the NVD API and extract a year's worth of CVE data. Extract and store the 
+   - Develop a utility class to connect to the NVD API and extract 120 days worth of CVE data. Extract and store the 
    data into MongoDB through your MongoEngine model.
    - Create a manage command that imports and calls your utility function (e.g. `csec_data_analytics_app/management/commands/mine_nvd.py`)
 
@@ -31,7 +32,7 @@ In this project you will extract data from the National Vulnerability Database a
    - Update the CVE records having known exploited vulnerabilities with the correct metric for exploitability
 5. **Test Queries**: 
    - Develop the following MongoEngine queries to answer the following questions:
-     - How many vulnerabilities did Google Chrome have last year?
+     - How many vulnerabilities did Google Chrome have in the past 120 days?
      - How many vulnerabilities had an attack vector of 'NETWORK'? How many had an attack vector of 'PHYSICAL'?
      - Which vendor had the highest number of known exploits last year?
      - What was the most common weakness last year?
@@ -55,9 +56,7 @@ a. MongoEngine Model Design (10 points)
 - Provide a comprehensive MongoEngine model outlining the structure of your vulnerability object.
 
 b. Data Mining Utility Class (15 points)
-- Design and document a utility class responsible for extracting data from:
-  - The National Vulnerability Database (NVD)
-  - CISA's Known Exploited Vulnerabilities
+- Design and document a utility class responsible for extracting data from the National Vulnerability Database (NVD)
 
 c. Data Queries (15 points)
 - Present the specific queries you developed for step 5
