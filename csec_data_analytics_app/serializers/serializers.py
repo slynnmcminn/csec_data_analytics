@@ -1,7 +1,5 @@
-# csec_data_analytics_app/serializers.py
-
 from rest_framework import serializers
-from .models import YourModel
+from .models import YourModel, Address  # Import your models
 
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
