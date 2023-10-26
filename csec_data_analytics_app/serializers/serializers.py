@@ -1,16 +1,11 @@
 from rest_framework import serializers
-from .models import YourModel, Address  # Import your models
+from django.apps import apps
 
-class AddressSerializer(serializers.ModelSerializer):
+Vulnerability = apps.get_model('csec_data_analytics_app', 'Vulnerability')
+
+class VulnerabilitySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Address
-        fields = ('street', 'city', 'state', 'zip_code')
-
-class YourModelSerializer(serializers.ModelSerializer):
-    address = AddressSerializer()  # Nested field
-
-    class Meta:
-        model = YourModel
+        model = Vulnerability
         fields = (
             'name',
             'age',
@@ -21,15 +16,8 @@ class YourModelSerializer(serializers.ModelSerializer):
             'website',
             'rating',
             'metadata',
-            'address',
         )
 
     def create(self, validated_data):
-        address_data = validated_data.pop('address', None)
-
-        instance = YourModel.objects.create(**validated_data)
-
-        if address_data:
-            Address.objects.create(your_model=instance, **address_data)
-
+        instance = Vulnerability.objects.create(**validated_data)
         return instance

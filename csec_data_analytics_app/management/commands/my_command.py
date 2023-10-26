@@ -6,3 +6,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         self.stdout.write('Hello from my custom command!')
+        
