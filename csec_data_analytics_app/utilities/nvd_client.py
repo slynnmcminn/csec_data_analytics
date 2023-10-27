@@ -1,3 +1,7 @@
+class VulnerableProduct:
+    pass
+
+
 def _get_cve_configurations(self, cve):
     """
     Extract all the configurations into MongoEngine VulnerableProduct objects.

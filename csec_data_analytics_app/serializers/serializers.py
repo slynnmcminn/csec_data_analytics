@@ -1,6 +1,5 @@
-from django.apps import apps
-
-Vulnerability = apps.get_model('csec_data_analytics_app', 'Vulnerability')
+from rest_framework import serializers
+from .models import Vulnerability  # Import your model
 
 class VulnerabilitySerializer(serializers.ModelSerializer):
     class Meta:
