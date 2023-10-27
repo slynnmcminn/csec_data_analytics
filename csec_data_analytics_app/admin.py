@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Vulnerability  # Import your models
 
-# Register your models here.
+admin.site.register(Vulnerability)
+# Register any other models you want to manage through the admin interface

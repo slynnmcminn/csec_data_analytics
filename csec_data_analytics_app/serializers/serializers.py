@@ -1,4 +1,3 @@
-from rest_framework import serializers
 from django.apps import apps
 
 Vulnerability = apps.get_model('csec_data_analytics_app', 'Vulnerability')
@@ -7,17 +6,12 @@ class VulnerabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Vulnerability
         fields = (
-            'name',
-            'age',
-            'email',
-            'is_student',
-            'registration_date',
-            'phone_number',
-            'website',
-            'rating',
-            'metadata',
+            'title',
+            'description',
+            'cve_id',
         )
 
     def create(self, validated_data):
-        instance = Vulnerability.objects.create(**validated_data)
+        instance = Vulnerability(**validated_data)
+        instance.save()
         return instance

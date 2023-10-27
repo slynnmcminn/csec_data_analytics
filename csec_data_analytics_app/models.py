@@ -1,19 +1,19 @@
-from django.db import models
+import django.db
 
 
-class Vulnerability(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.TextField()
-    severity = models.CharField(max_length=20)
-    published_date = models.DateTimeField()
-    last_modified_date = models.DateTimeField()
-    evaluator_comment = models.TextField()
-    evaluator_solution = models.TextField()
-    evaluator_impact = models.TextField()
-    cisa_exploit_add_date = models.DateField()
-    cisa_action_due_date = models.DateField()
-    cisa_required_action = models.TextField()
-    cisa_vulnerability_name = models.CharField(max_length=100)
+class Vulnerability(django.db.models.Model):
+    title = django.db.models.CharField(max_length=100)
+    description = django.db.models.TextField()
+    severity = django.db.models.CharField(max_length=20)
+    published_date = django.db.models.DateTimeField()
+    last_modified_date = django.db.models.DateTimeField()
+    evaluator_comment = django.db.models.TextField()
+    evaluator_solution = django.db.models.TextField()
+    evaluator_impact = django.db.models.TextField()
+    cisa_exploit_add_date = django.db.models.DateField()
+    cisa_action_due_date = django.db.models.DateField()
+    cisa_required_action = django.db.models.TextField()
+    cisa_vulnerability_name = django.db.models.CharField(max_length=100)
 
     # Add more fields as needed for your vulnerability objects
 

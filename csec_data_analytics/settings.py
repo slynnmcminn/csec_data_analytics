@@ -28,7 +28,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'csec_data_analytics_app.apps.CsecDataAnalyticsAppConfig',
+    'csec_data_analytics_app',
     'rest_framework',
     'mongoengine',
     'rest_framework_mongoengine',
