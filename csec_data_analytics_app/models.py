@@ -1,4 +1,5 @@
 import django.db
+from mongoengine import Document, EmbeddedDocument, EmbeddedDocumentListField, StringField, URLField, DictField, DecimalField, DateTimeField, ListField, EmbeddedDocumentField
 
 
 class Vulnerability(django.db.models.Model):
@@ -16,6 +17,18 @@ class Vulnerability(django.db.models.Model):
     cisa_vulnerability_name = django.db.models.CharField(max_length=100)
 
     # Add more fields as needed for your vulnerability objects
+class CVEVulnerability(Document):
+    cve_id = StringField(required=True, unique=True)
+    description = StringField(required=True)
+    published_date = DateTimeField()
+    severity = StringField()
+    attack_vector = StringField()
+    impact_score = StringField()
+    references = StringField()
+    cvss_vector = StringField()
+    affected_vendors = StringField()
+    affected_products = StringField()
+    nested_data = StringField()
 
     def __str__(self):
         return self.title

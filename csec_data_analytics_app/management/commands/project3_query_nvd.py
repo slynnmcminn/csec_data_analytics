@@ -2,7 +2,6 @@ from django.core.management.base import BaseCommand
 import csec_data_analytics_app.utilities.vulnerability_queries as vuln_queries
 
 
-
 class Command(BaseCommand):
     help = 'Describes what your command does.'
 

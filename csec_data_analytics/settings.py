@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'csec_data_analytics_app',
+    'csec_data_analytics',
     'rest_framework',
     'mongoengine',
     'rest_framework_mongoengine',
