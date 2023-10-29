@@ -1,16 +1,17 @@
 from rest_framework import serializers
 
+from .models import Vulnerability
 
-class VulnerabilitySerializer(serializers.ModelSerializer):
+
+class VulnerabilityCustomSerializer(serializers.ModelSerializer):
     class Meta:
-        model = VulnerabilitySerializer
+        model = Vulnerability
         fields = (
             'title',
             'description',
             'cve_id',
         )
-
     def create(self, validated_data):
-        instance = VulnerabilitySerializer(**validated_data)
+        instance = Vulnerability(**validated_data)
         instance.save()
         return instance

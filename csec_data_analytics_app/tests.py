@@ -1,5 +1,7 @@
 from django.test import TestCase
+
 from .models import Vulnerability  # Import your model
+
 
 class VulnerabilityTestCase(TestCase):
     def setUp(self):
