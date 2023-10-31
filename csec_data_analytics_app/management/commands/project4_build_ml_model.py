@@ -8,5 +8,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         ml_manager = MLManager()
-        ml_manager.load_data()
-        ml_manager.export_to_csv()
+        ml_manager.train()
