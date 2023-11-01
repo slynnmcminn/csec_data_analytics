@@ -2,11 +2,6 @@ from django.urls import path
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from csec_data_analytics_app.views.views_vulnerability import (
-    RootView, SpectacularAPIview, SpectacularSwaggerView,
-    VulnerabilityCreateView, create_vulnerability, delete_vulnerability,
-    list_vulnerabilities, retrieve_vulnerability, update_vulnerability)
-
 urlpatterns = [
     path('', RootView.as_view(), name='root'),  # Root URL
     path('vulnerabilities/', list_vulnerabilities, name='vulnerability-list'),

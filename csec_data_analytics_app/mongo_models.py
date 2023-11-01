@@ -1,8 +1,6 @@
 from mongoengine import (DateTimeField, Document, EmbeddedDocument,
                          EmbeddedDocumentField, FloatField, ListField,
                          StringField)
-
-
 class CVSSAttributes(EmbeddedDocument):
     base_score = FloatField()
     exploitability_score = FloatField()

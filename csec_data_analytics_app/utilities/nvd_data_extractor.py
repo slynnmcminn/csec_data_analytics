@@ -1,11 +1,7 @@
 from datetime import datetime, timedelta
-
 import requests
 from mongoengine import connect
-
 from csec_data_analytics_app.mongo_models import CVEVulnerability
-
-
 class NVDDataExtractor:
     def __init__(self, api_key):
         self.api_key = api_key

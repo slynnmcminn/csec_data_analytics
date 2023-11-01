@@ -3,11 +3,9 @@ print("Importing views_vulnerability.py")
 
 import json
 
-from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from csec_data_analytics_app.models import Vulnerability
 
 class VulnerabilityCreateView(generics.CreateAPIView):
     queryset = Vulnerability.objects.all()
@@ -15,7 +13,7 @@ class VulnerabilityCreateView(generics.CreateAPIView):
 
 class VulnerabilityList(APIView):
     @extend_schema(
-        responses=VulnerabilitySerializer,
+        responses=CustomVulnerabilitySerializer,
         description="Get vulnerability objects from the database"
     )
     def get(self, request, *args, **kwargs):

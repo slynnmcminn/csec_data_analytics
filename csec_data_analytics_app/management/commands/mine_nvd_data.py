@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-
 from csec_data_analytics.settings import NVD_API_KEY
 from csec_data_analytics_app.utilities.nvd_data_extractor import \
     NVDDataExtractor  # Correct import path
