@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+
 from mongoengine import connect
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -125,7 +126,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Mongoengine configuration
 _MONGODB_DATABASE_HOST = \
     'mongodb://%s:%s@%s/%s?retryWrites=true&w=majority' \
-    % ('admin', 'put5gwz2bjx9phe!TUD', 'localhost', 'your_db_name')
+    % ('admin', 'put5gwz2bjx9phe!TUD', 'localhost', 'csec_data_analytics.db')
+
+NVD_API_KEY = '614cc475-6309-407d-b033-64c6fa369fdb'
 
 connect(host=_MONGODB_DATABASE_HOST)
 
