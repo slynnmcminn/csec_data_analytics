@@ -1,21 +1,27 @@
+"""
+URL configuration for csec_data_analytics project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/4.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
 from django.urls import path
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
+from csec_data_analytics_app.views.views_vulnerability import VulnerabilityList, VulnerabilityDetail
 
 urlpatterns = [
-    path('', RootView.as_view(), name='root'),  # Root URL
-    path('vulnerabilities/', list_vulnerabilities, name='vulnerability-list'),
-    path('vulnerabilities/<int:vulnerability_id>/', retrieve_vulnerability, name='vulnerability-detail'),
-    path('vulnerabilities/create/', create_vulnerability, name='vulnerability-create'),
-    path('vulnerabilities/update/<int:vulnerability_id>/', update_vulnerability, name='vulnerability-update'),
-    path('vulnerabilities/delete/<int:vulnerability_id>/', delete_vulnerability, name='vulnerability-delete'),
+    path('vulnerability/', VulnerabilityList.as_view(), name='vulnerability-list'),
+    path('vulnerability/<str:cve_id>/', VulnerabilityDetail.as_view(), name='vulnerability-detail'),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
-
-class RootView(APIView):
-    def get(self, request):
-        data = {
-            "message": "Welcome to My API",
-        }
-        return Response(data)

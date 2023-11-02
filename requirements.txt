@@ -11,3 +11,7 @@ sqlparse==0.4.4
 tzdata==2023.3
 Faker==19.3.1
 drf-spectacular==0.26.4
+pathlib~=1.0.1
+pandas~=2.1.0
+requests~=2.31.0
+scikit-learn~=1.0.2
