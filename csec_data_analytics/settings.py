@@ -140,3 +140,14 @@ connect(host=_MONGODB_DATABASE_HOST)
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.dummy',
+    },
+    'mongodb': {
+        'ENGINE': 'djongo',
+        'ENFORCE_SCHEMA': True,
+        'NAME': 'csec_data_analytics+app.db',
+    },
+}
