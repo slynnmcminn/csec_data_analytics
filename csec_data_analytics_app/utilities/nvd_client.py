@@ -3,7 +3,7 @@ import requests
 import json
 from datetime import datetime, timedelta
 
-from csec_data_analytics_app.models import CVEVulnerability
+from csec_data_analytics_app.models import Vulnerability, VulnerableProduct
 
 
 class NVDClient:
