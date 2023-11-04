@@ -148,6 +148,6 @@ DATABASES = {
     'mongodb': {
         'ENGINE': 'djongo',
         'ENFORCE_SCHEMA': True,
-        'NAME': 'csec_data_analytics+app.db',
+        'NAME': 'csec_data_analytics_app.db',
     },
 }
