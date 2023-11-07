@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'mongoengine',
     'rest_framework_mongoengine',
     'drf_spectacular',
+    'other_app',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
