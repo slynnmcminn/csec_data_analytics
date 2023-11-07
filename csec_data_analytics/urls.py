@@ -16,12 +16,16 @@ Including another URLconf
 """
 from django.urls import path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-
 from csec_data_analytics_app.views.views_vulnerability import VulnerabilityList, VulnerabilityDetail
+from other_app.views import Home
+from django.urls import include, path
 
 urlpatterns = [
     path('vulnerability/', VulnerabilityList.as_view(), name='vulnerability-list'),
     path('vulnerability/<str:cve_id>/', VulnerabilityDetail.as_view(), name='vulnerability-detail'),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path(' ', views.home, name='home'),
+    path(' ', Home.as_view(), name='home'),
+    path('blog/', include('blog.urls'))
 ]
