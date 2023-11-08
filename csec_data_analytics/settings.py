@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from mongoengine import connect
+from csec_data_analytics_app.mongo_models import MEVulnerability
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

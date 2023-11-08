@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>mongo_models.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+mongo_models.py</font>
+</center></td></tr></table>
+<pre><span class="s0">from </span><span class="s1">mongoengine </span><span class="s0">import </span><span class="s1">Document</span><span class="s2">, </span><span class="s1">StringField</span><span class="s2">, </span><span class="s1">ListField</span><span class="s2">, </span><span class="s1">FloatField</span><span class="s2">, </span><span class="s1">IntField</span><span class="s2">, </span><span class="s1">DateTimeField</span><span class="s2">, </span><span class="s1">EmbeddedDocument</span><span class="s2">, </span><span class="s1">EmbeddedDocumentField</span>
+
+<span class="s0">class </span><span class="s1">MEVulnerability</span><span class="s2">(</span><span class="s1">Document</span><span class="s2">):</span>
+    <span class="s1">cve_id </span><span class="s2">= </span><span class="s1">StringField</span><span class="s2">(</span><span class="s1">required</span><span class="s2">=</span><span class="s0">True</span><span class="s2">, </span><span class="s1">unique</span><span class="s2">=</span><span class="s0">True</span><span class="s2">)</span>
+    <span class="s1">description </span><span class="s2">= </span><span class="s1">StringField</span><span class="s2">(</span><span class="s1">required</span><span class="s2">=</span><span class="s0">True</span><span class="s2">)</span>
+    <span class="s1">cpe_configurations </span><span class="s2">= </span><span class="s1">ListField</span><span class="s2">(</span><span class="s1">StringField</span><span class="s2">())</span>
+    <span class="s1">cwes </span><span class="s2">= </span><span class="s1">ListField</span><span class="s2">(</span><span class="s1">StringField</span><span class="s2">())</span>
+    <span class="s1">cisa_exploitability_metric </span><span class="s2">= </span><span class="s1">StringField</span><span class="s2">()</span>
+    <span class="s1">cvss_base_score </span><span class="s2">= </span><span class="s1">FloatField</span><span class="s2">()</span>
+    <span class="s1">cvss_vector </span><span class="s2">= </span><span class="s1">StringField</span><span class="s2">()</span>
+    <span class="s1">cvss_access_vector </span><span class="s2">= </span><span class="s1">StringField</span><span class="s2">()</span>
+    <span class="s1">cvss_access_complexity </span><span class="s2">= </span><span class="s1">StringField</span><span class="s2">()</span>
+    <span class="s1">cvss_authentication </span><span class="s2">= </span><span class="s1">StringField</span><span class="s2">()</span>
+    <span class="s1">cvss_confidentiality_impact </span><span class="s2">= </span><span class="s1">StringField</span><span class="s2">()</span>
+    <span class="s1">cvss_integrity_impact </span><span class="s2">= </span><span class="s1">StringField</span><span class="s2">()</span>
+    <span class="s1">cvss_availability_impact </span><span class="s2">= </span><span class="s1">StringField</span><span class="s2">()</span>
+    <span class="s1">cvss_exploitability_score </span><span class="s2">= </span><span class="s1">FloatField</span><span class="s2">()</span>
+    <span class="s1">cvss_impact_score </span><span class="s2">= </span><span class="s1">FloatField</span><span class="s2">()</span>
+    <span class="s1">published_date </span><span class="s2">= </span><span class="s1">DateTimeField</span><span class="s2">()</span>
+    <span class="s1">last_modified_date </span><span class="s2">= </span><span class="s1">DateTimeField</span><span class="s2">()</span>
+</pre>
+</body>
+</html>

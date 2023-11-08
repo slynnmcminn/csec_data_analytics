@@ -12,8 +12,6 @@ class CVEVulnerability(Document):
     affected_vendors = StringField()
     affected_products = StringField()
     nested_data = StringField()
-
-    # Additional fields from your previous model
     catalogVersion = StringField()
     title = StringField()
     count = IntField()

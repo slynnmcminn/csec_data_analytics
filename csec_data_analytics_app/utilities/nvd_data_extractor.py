@@ -1,7 +1,7 @@
-from datetime import datetime, timedelta
 import requests
-from mongoengine import connect
-from csec_data_analytics_app.mongo_models import CVEVulnerability
+from datetime import datetime, timedelta
+from csec_data_analytics_app.mongo_models import MEVulnerability
+
 class NVDDataExtractor:
     def __init__(self, api_key):
         self.api_key = api_key
@@ -34,7 +34,7 @@ class NVDDataExtractor:
         # Extract relevant information from the data and create a CVEVulnerability document
         # Store the document in your MongoDB database
         # Example code for creating and storing a CVEVulnerability document:
-        cve = CVEVulnerability(
+        cve = MEVulnerability(
             cve_id=data['cve']['CVE_data_meta']['ID'],
             description=data['cve']['description']['description_data'][0]['value'],
             published_date=datetime.strptime(data['publishedDate'], "%Y-%m-%dT%H:%M:%S:%fZ"),
