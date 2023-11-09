@@ -15,7 +15,7 @@ class NVDClient:
         self.api_url = f'https://services.nvd.nist.gov/rest/json/cves/2.0?lastModStartDate={from_date.isoformat()}&' \
                        f'lastModEndDate={to_date.isoformat()}'
         nvd_api_key = os.environ.get('NVD_API_KEY')
-        self.header = {'apikey': nvd_api_key}
+        self.header = {'apikey': "7eee3c27-1cdc-4049-a53f-98bc890833c1"}
         self.cves = []
         # Purge any existing records in Mongo before storing
         if delete_existing:
