@@ -1,4 +1,5 @@
-from mongoengine import Document, StringField, ListField, FloatField, DateTimeField, DocumentField
+from mongoengine import FloatField, DateTimeField
+from mongoengine import Document, StringField, ListField
 
 class MEVulnerability(Document):
     cve_id = StringField(required=True, unique=True)

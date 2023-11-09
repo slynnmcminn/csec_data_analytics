@@ -79,6 +79,9 @@ DATABASES = {
 _MONGODB_DATABASE_HOST = 'mongodb://admin:put5gwz2bjx9phe!TUD@localhost/django-mongo?retryWrites=true&w=majority'
 connect(host=_MONGODB_DATABASE_HOST)
 
+# Replace the old API key with the new one
+NVD_API_KEY = 'fee8faf8-eeb5-4265-a83d-23ecb39cb8e0'
+
 # Used to generate OpenAPI schemas
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
