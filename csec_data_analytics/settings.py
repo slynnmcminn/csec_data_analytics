@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
 from mongoengine import connect
-from csec_data_analytics_app.mongo_models import MEVulnerability
+from csec_data_analytics_app.models import MEVulnerability
+from config import NVD_API_KEY
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -80,7 +81,7 @@ _MONGODB_DATABASE_HOST = 'mongodb://admin:put5gwz2bjx9phe!TUD@localhost/django-m
 connect(host=_MONGODB_DATABASE_HOST)
 
 # Replace the old API key with the new one
-NVD_API_KEY = '7eee3c27-1cdc-4049-a53f-98bc890833c1'
+NVD_API_KEY = 'NVD_API_KEY'
 
 # Used to generate OpenAPI schemas
 REST_FRAMEWORK = {
