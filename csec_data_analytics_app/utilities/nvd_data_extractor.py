@@ -15,8 +15,8 @@ class NVDDataExtractor:
 
         # Prepare the request parameters with your API key and corrected date format
         params = {
-            "modStartDate": start_date.strftime("yyyy-MM-dd\'T\'HH:mm:ss:SSS Z"),
-            "modEndDate": end_date.strftime("yyyy-MM-dd\'T\'HH:mm:ss:SSS Z"),
+            "modStartDate": start_date.strftime("%Y-%m-%dT%H:%M:%S.%f Z"),
+            "modEndDate": end_date.strftime("%Y-%m-%dT%H:%M:%S.%f Z"),
         }
 
         # Debugging: Print request parameters
@@ -46,7 +46,7 @@ class NVDDataExtractor:
         cve = MEVulnerability(
             cve_id=data['cve']['CVE_data_meta']['ID'],
             description=data['cve']['description']['description_data'][0]['value'],
-            published_date=datetime.strptime(data['publishedDate'], "yyyy-MM-dd\'T\'HH:mm:ss:SSS Z"),
+            published_date=datetime.strptime(data['publishedDate'], "%Y-%m-%dT%H:%M:%S.%f Z"),
             # Add more fields as needed
         )
         cve.save()
