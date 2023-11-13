@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from mongoengine import connect
-from csec_data_analytics_app.models import MEVulnerability
+from csec_data_analytics_app.models import CVEVulnerability
 from config import NVD_API_KEY
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -68,8 +68,8 @@ WSGI_APPLICATION = 'csec_data_analytics.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',  # or another appropriate engine
+        'NAME': 'django_mongo',  # The database name
     },
     'mongodb': {
         'ENGINE': 'django.db.backends.dummy',

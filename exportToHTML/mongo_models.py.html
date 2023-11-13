@@ -16,7 +16,7 @@ mongo_models.py</font>
 </center></td></tr></table>
 <pre><span class="s0">from </span><span class="s1">mongoengine </span><span class="s0">import </span><span class="s1">Document</span><span class="s2">, </span><span class="s1">StringField</span><span class="s2">, </span><span class="s1">ListField</span><span class="s2">, </span><span class="s1">FloatField</span><span class="s2">, </span><span class="s1">IntField</span><span class="s2">, </span><span class="s1">DateTimeField</span><span class="s2">, </span><span class="s1">EmbeddedDocument</span><span class="s2">, </span><span class="s1">EmbeddedDocumentField</span>
 
-<span class="s0">class </span><span class="s1">MEVulnerability</span><span class="s2">(</span><span class="s1">Document</span><span class="s2">):</span>
+<span class="s0">class </span><span class="s1">CVEVulnerability</span><span class="s2">(</span><span class="s1">Document</span><span class="s2">):</span>
     <span class="s1">cve_id </span><span class="s2">= </span><span class="s1">StringField</span><span class="s2">(</span><span class="s1">required</span><span class="s2">=</span><span class="s0">True</span><span class="s2">, </span><span class="s1">unique</span><span class="s2">=</span><span class="s0">True</span><span class="s2">)</span>
     <span class="s1">description </span><span class="s2">= </span><span class="s1">StringField</span><span class="s2">(</span><span class="s1">required</span><span class="s2">=</span><span class="s0">True</span><span class="s2">)</span>
     <span class="s1">cpe_configurations </span><span class="s2">= </span><span class="s1">ListField</span><span class="s2">(</span><span class="s1">StringField</span><span class="s2">())</span>

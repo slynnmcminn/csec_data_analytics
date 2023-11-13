@@ -5,8 +5,8 @@ class Command(BaseCommand):
     help = 'Run queries to gather information about vulnerabilities.'
 
     def handle(self, *args, **kwargs):
-        physical_count = vuln_queries.get_physical_attack_vector_count()
-        print(f"Number of vulnerabilities with 'PHYSICAL' attack vector: {physical_count}")
+        chrome_vulnerabilities_count = vuln_queries.get_chrome_vulnerabilities_count()
+        print(f"Number of Google Chrome vulnerabilities in the past 120 days: {chrome_vulnerabilities_count}")
 
         top_products = vuln_queries.get_top_products_with_known_exploit(top_n=50)
         print("Top 50 products with known exploits:")
