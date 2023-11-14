@@ -8,7 +8,17 @@ class Command(BaseCommand):
         chrome_vulnerabilities_count = vuln_queries.get_chrome_vulnerabilities_count()
         print(f"Number of Google Chrome vulnerabilities in the past 120 days: {chrome_vulnerabilities_count}")
 
-        top_products = vuln_queries.get_top_products_with_known_exploit(top_n=50)
-        print("Top 50 products with known exploits:")
-        for i, product in enumerate(top_products, start=1):
-            print(f"{i}: {product['_id']['vendor']} {product['_id']['product']} has {product['count']} known exploits")
+        # Comment out or remove this if get_top_products_with_known_exploit is not implemented
+        # top_products = vuln_queries.get_top_products_with_known_exploit(top_n=50)
+        # print("Top 50 products with known exploits:")
+        # for i, product in enumerate(top_products, start=1):
+        #     print(f"{i}: {product['_id']['vendor']} {product['_id']['product']} has {product['count']} known exploits")
+
+        network_vulnerabilities = vuln_queries.get_vulnerabilities_by_attack_vector('NETWORK')
+        print(f"Number of vulnerabilities with 'NETWORK' attack vector: {network_vulnerabilities}")
+
+        physical_vulnerabilities = vuln_queries.get_vulnerabilities_by_attack_vector('PHYSICAL')
+        print(f"Number of vulnerabilities with 'PHYSICAL' attack vector: {physical_vulnerabilities}")
+
+        most_common_weakness = vuln_queries.get_most_common_weakness_last_year()
+        print(f"Most common weakness last year: {most_common_weakness}")

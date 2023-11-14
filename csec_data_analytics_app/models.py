@@ -1,44 +1,26 @@
-from mongoengine import IntField, FloatField, DateTimeField, Document, StringField, ListField
+from mongoengine import Document, EmbeddedDocument, StringField, DateTimeField, ListField, EmbeddedDocumentField, IntField, FloatField
+
+class VulnerabilityItem(EmbeddedDocument):
+    cveID = StringField()
+    vendorProject = StringField()
+    product = StringField()
+    vulnerabilityName = StringField()
+    dateAdded = DateTimeField()
+    shortDescription = StringField()
+    requiredAction = StringField()
+    dueDate = DateTimeField()
+    knownRansomwareCampaignUse = StringField()
+    notes = StringField()
+    cvss_vector = StringField()  # Added for attack vector information
+    cwe = StringField()          # Added for weakness (CWE) information
 
 class CVEVulnerability(Document):
-    cve_ID = StringField(required=True, unique=True)
-    description = StringField(required=True)
-    affected_vendors = StringField()
-    affected_products = StringField()
-    attack_vector = StringField()
-    catalogVersion = StringField()
-    cisa_exploitability_metric = StringField()
-    count = IntField()
-    cpe_configurations = ListField(StringField())
-    cvss_access_vector = StringField()
-    cvss_access_complexity = StringField()
-    cvss_authentication = StringField()
-    cvss_availability_impact = StringField()
-    cvss_base_score = FloatField()
-    cvss_confidentiality_impact = StringField()
-    cvss_exploitability = FloatField()
-    cvss_impact_score = FloatField()
-    cvss_integrity_impact = StringField()
-    cvss_vector = StringField()
-    cwes = ListField(StringField())
-    dateAdded: DateTimeField()
-    dateReleased = StringField()
-    dueDate = DateTimeField()
-    impact_score = StringField()
-    known_exploit = StringField()
-    knownRansomwareCampaignUse = StringField()
-    last_modified_date = DateTimeField()
-    nested_data = StringField()
-    notes = StringField()
-    product = StringField()
-    published_date = DateTimeField()
-    references = StringField()
-    requiredAction = StringField()
-    severity = StringField()
-    shortDescription = StringField()
+    _id = StringField(primary_key=True)  # Assuming you want to use this as your primary key
     title = StringField()
-    vendorProject = StringField()
-    vulnerabiliityName = StringField()
+    catalogVersion = StringField()
+    dateReleased = DateTimeField()
+    count = IntField()
+    vulnerabilities = ListField(EmbeddedDocumentField(VulnerabilityItem))
 
     class Meta:
         db_table = 'c_v_e_vulnerability'  # Specify the collection name
