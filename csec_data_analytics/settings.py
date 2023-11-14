@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from mongoengine import connect
 from csec_data_analytics_app.models import CVEVulnerability
-from config import NVD_API_KEY
+from csec_data_analytics_app.utilities.config import NVD_API_KEY
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

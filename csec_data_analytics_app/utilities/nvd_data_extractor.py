@@ -1,9 +1,9 @@
 import requests
-import config
+import sys
+sys.path.append(r'C:\Users\cyberarena\Documents\GitHub\csec_data_analytics')
 from datetime import datetime, timedelta
 from csec_data_analytics_app.models import CVEVulnerability, VulnerabilityItem
 NVD_API_KEY = "0be1836b-70d3-4b9c-9100-5e301686be0c"  # Your NVD API Key
-
 
 class NVDDataExtractor:
     def __init__(self):
