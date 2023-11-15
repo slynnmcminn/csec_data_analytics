@@ -50,39 +50,7 @@ Present the complete code developed for the Chat Completion Manager class. Ensur
 #### 2. Analytical Reflection (60% of total score)
 Delve into your prompt construction strategy. Break down each element of your prompts, explaining their purpose and considering alternative approaches.
 
-Analyze and discuss the outcomes from both GPT-4 and GPT-3.5 trials. Evaluate the reliability of the vulnerability description in context to your selected feature extraction. Reflect on both the triumphs and shortcomings in the language model's performance.
+Evaluate the reliability of the vulnerability description in context to your selected feature extraction. Reflect on both the successes and failures in the language model's performance.
 
 #### BONUS (Extra 10%)
 For those attempting the bonus challenge, include your updated machine learning code with the new feature integration. Provide a comparative analysis of the model's performance pre- and post-integration of the new feature.
-
-
-## Submission Requirements
-
-Compile a report comprising:
-
-### **Cover Page**: 
-  - Your name
-  - Submission date
-  - Course designation
-
-### **Assignment Documentation**
-
----
-
-#### 1. Code Documentation (40 points)
-
-Include a copy of the code you developed for the Chat Completion Manager class. Please do not submit screenshots but the entire code.
-
----
-
-#### 2. Reflection and Understanding (60 points)
-
-Explain your prompt, decompose the purpose of each prompt element and consider other approaches to take for prompt engineering.
-
-Document and interpret the results from both GPT 4 and 3.5 tests. Determine whether the vulenrability description has reliable language for extracting your selected feature. Also, propose reasons both the successes and failures of the LLM chat completion.
-
----
-
-
-#### BONUS (10 points)
-For the bonus, include a copy of your machine learning code where the new feature is added, and provide comparative analysis of the machine learning model performance
