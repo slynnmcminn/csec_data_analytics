@@ -2,7 +2,6 @@ import os
 import requests
 import json
 from datetime import datetime, timedelta
-
 from csec_data_analytics_app.models import Vulnerability, VulnerableProduct
 
 class NVDClient:
@@ -26,4 +25,24 @@ class NVDClient:
         self._store_vulnerabilities()
 
     def _fetch_vulnerabilities(self, start_index=0):
-        response = requests
+        params = {
+            'startIndex': start_index,
+            'resultsPerPage': self.MAX_RESULTS_PER_REQUEST,
+            # ... any other required parameters ...
+        }
+        try:
+            response = requests.get(self.api_url, headers=self.header, params=params)
+            response.raise_for_status()  # Raises an HTTPError if the HTTP request returned an unsuccessful status code
+
+            data = response.json()
+            if 'result' in data and 'CVE_Items' in data['result']:
+                self.cves.extend(data['result']['CVE_Items'])
+                total_results = data['result']['totalResults']
+                return start_index + len(data['result']['CVE_Items']) < total_results, start_index + len(
+                    data['result']['CVE_Items'])
+            else:
+                return False, 0
+
+        except requests.RequestException as e:
+            print(f"An error occurred: {e}")
+            return False, 0

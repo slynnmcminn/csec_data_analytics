@@ -10,8 +10,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l)92jea@59hmf1l9^@1#^@h2*v3pbnh@7viy4mh-80ev_u(9j^'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-default-secret-key')
+NVD_API_KEY = os.environ.get('NVD_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -70,15 +70,20 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',  # or another appropriate engine
         'NAME': 'django_mongo',  # The database name
+        'HOST': 'localhost',
+        'PORT': 27017,  # MongoDB port, usually 27017
     },
     'mongodb': {
         'ENGINE': 'django.db.backends.dummy',
     },
 }
 
+# MongoEngine connection
+import mongoengine
+mongoengine.connect(db='djongo_mongo', host='localhost', port=27017)
+
 # Mongoengine configuration
-_MONGODB_DATABASE_HOST = 'mongodb://admin:put5gwz2bjx9phe!TUD@localhost/django-mongo?retryWrites=true&w=majority'
-connect(host=_MONGODB_DATABASE_HOST)
+_MONGODB_DATABASE_HOST = os.environ.get('MONGODB_DATABASE_HOST')
 
 # Replace the old API key with the new one
 NVD_API_KEY = 'NVD_API_KEY'

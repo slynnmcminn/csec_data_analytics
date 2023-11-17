@@ -1,7 +1,8 @@
-from mongoengine import Document, EmbeddedDocument, StringField, DateTimeField, ListField, EmbeddedDocumentField, IntField, FloatField
+from mongoengine import Document, EmbeddedDocument, StringField, DateTimeField, ListField, EmbeddedDocumentField, IntField
 
 class VulnerabilityItem(EmbeddedDocument):
-    cveID = StringField()
+    cveID = StringField(required=True)
+    description = StringField()
     vendorProject = StringField()
     product = StringField()
     vulnerabilityName = StringField()
@@ -11,16 +12,18 @@ class VulnerabilityItem(EmbeddedDocument):
     dueDate = DateTimeField()
     knownRansomwareCampaignUse = StringField()
     notes = StringField()
-    cvss_vector = StringField()  # Added for attack vector information
-    cwe = StringField()          # Added for weakness (CWE) information
+    cvss_vector = StringField()  # For attack vector information
+    cwe = StringField()          # For weakness (CWE) information
+    # Add any additional fields that are unique to CISA or NVD data
 
 class CVEVulnerability(Document):
-    _id = StringField(primary_key=True)  # Assuming you want to use this as your primary key
+    _id = StringField(primary_key=True)
     title = StringField()
+    publishedDate = DateTimeField()
     catalogVersion = StringField()
     dateReleased = DateTimeField()
     count = IntField()
     vulnerabilities = ListField(EmbeddedDocumentField(VulnerabilityItem))
+    source = StringField()  # New field to indicate the data source (e.g., 'NVD', 'CISA')
 
-    class Meta:
-        db_table = 'c_v_e_vulnerability'  # Specify the collection name
+    meta = {'collection': 'cve_vulnerabilities'}
