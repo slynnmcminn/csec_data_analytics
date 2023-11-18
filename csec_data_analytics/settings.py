@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from mongoengine import connect
-from csec_data_analytics_app.models import CVEVulnerability
+from csec_data_analytics_app.models import Vulnerability, VulnerableProduct, VulnerabilityImpact
 from csec_data_analytics_app.utilities.config import NVD_API_KEY
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-default-secret-key')
-NVD_API_KEY = os.environ.get('NVD_API_KEY')
+NVD_API_KEY = os.environ.get("NVD_API_KEY", "Your_default_key_if_any")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -85,8 +85,9 @@ mongoengine.connect(db='djongo_mongo', host='localhost', port=27017)
 # Mongoengine configuration
 _MONGODB_DATABASE_HOST = os.environ.get('MONGODB_DATABASE_HOST')
 
-# Replace the old API key with the new one
-NVD_API_KEY = 'NVD_API_KEY'
+# Ensure the NVD API key is correctly set
+NVD_API_KEY = os.environ.get("NVD_API_KEY", "Your_default_key_if_any")
+
 
 # Used to generate OpenAPI schemas
 REST_FRAMEWORK = {
