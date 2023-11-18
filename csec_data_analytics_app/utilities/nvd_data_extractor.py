@@ -52,14 +52,14 @@ class NVDDataExtractor:
         except Exception as e:
             print(f"Error processing CVE ID {cve_id}: {e}")
 
-def extract_cisa_data():
-    url = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
-    response = requests.get(url)
-    data = response.json()
-
-    for item in data['vulnerabilities']:  # Adjust according to actual JSON structure
-        # Create and save the model instance
-        vulnerability = CVEVulnerability(
-            # map fields from item to your model fields
-        )
-        vulnerability.save()
+# def extract_cisa_data():
+#    url = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
+#    response = requests.get(url)
+#    data = response.json()
+#
+#    for item in data['vulnerabilities']:  # Adjust according to actual JSON structure
+#        # Create and save the model instance
+#        vulnerability = CVEVulnerability(
+#            # map fields from item to your model fields
+# #        )
+#        vulnerability.save()
