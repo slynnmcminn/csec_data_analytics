@@ -1,55 +1,60 @@
 from django.core.management.base import BaseCommand
-from csec_data_analytics_app.models import Vulnerability  # Import your Vulnerability model
-
-# Define the VulnerabilityQueries class with actual MongoDB queries
-class VulnerabilityQueries:
-    @staticmethod
-    def get_attack_vector_count(attack_vector):
-        return Vulnerability.objects(attack_vector=attack_vector).count()
-
-    @staticmethod
-    def get_top_products_with_known_exploit(top_n):
-        # Assuming you want to get the top N products by the number of vulnerabilities
-        # This implementation might need adjustment based on your specific requirements
-        return Vulnerability.objects(known_exploit=True).order_by('-cve_id')[:top_n]
-
-    @staticmethod
-    def get_chrome_vulnerabilities_count():
-        return Vulnerability.objects(vulnerable_products__product="Chrome").count()
-
-    @staticmethod
-    def get_vulnerabilities_by_attack_vector(attack_vector):
-        return list(Vulnerability.objects(attack_vector=attack_vector))
-
-    @staticmethod
-    def get_most_common_weakness_last_year():
-        # This requires additional fields in your model for weakness and date
-        # Placeholder logic as an example
-        return "Calculated Weakness"
+from csec_data_analytics_app.models import Vulnerability
 
 class Command(BaseCommand):
     help = 'Run queries to gather information about vulnerabilities.'
 
     def handle(self, *args, **kwargs):
-        vuln_queries = VulnerabilityQueries()
+        # Add your logic to call the functions here, if needed
+        self.get_attack_vector_count('NETWORK')
+        self.get_attack_vector_count('PHYSICAL')
+        self.get_top_products_with_known_exploit(50)
 
-        chrome_vulnerabilities_count = vuln_queries.get_chrome_vulnerabilities_count()
-        print(f"Number of Google Chrome vulnerabilities in the past 120 days: {chrome_vulnerabilities_count}")
+    def get_attack_vector_count(self, attack_vector):
+        attack_vector_count = Vulnerability.objects(attack_vector=attack_vector).count()
+        print(f"There are {attack_vector_count} vulnerabilities with the attack vector {attack_vector}.")
 
-        top_products = vuln_queries.get_top_products_with_known_exploit(top_n=50)
-        print("Top 50 products with known exploits:")
-        for vulnerability in top_products:
-            for product in vulnerability.vulnerable_products:
-                print(f"{product.vendor} {product.product}")
+    def get_top_products_with_known_exploit(self, top_n):
+        # Create the aggregation pipeline
+        pipeline = [
+            {"$unwind": "$vulnerable_products"},
+            {"$match": {"known_exploit": True}},
+            {"$group": {
+                "_id": {
+                    "vendor": "$vulnerable_products.vendor",
+                    "product": "$vulnerable_products.product"
+                },
+                "count": {"$sum": 1}
+            }},
+            {"$sort": {"count": -1}},
+            {"$limit": top_n}
+        ]
 
-        network_vulnerabilities = vuln_queries.get_vulnerabilities_by_attack_vector('NETWORK')
-        print(f"Number of vulnerabilities with 'NETWORK' attack vector: {len(network_vulnerabilities)}")
+        # Run the aggregation
+        results = list(Vulnerability.objects().aggregate(*pipeline))
 
-        physical_vulnerabilities = vuln_queries.get_vulnerabilities_by_attack_vector('PHYSICAL')
-        print(f"Number of vulnerabilities with 'PHYSICAL' attack vector: {len(physical_vulnerabilities)}")
+        def handle(self, *args, **options):
+            self.most_common_weakness()
 
-        most_common_weakness = vuln_queries.get_most_common_weakness_last_year()
-        print(f"Most common weakness last year: {most_common_weakness}")
+        def most_common_weakness(self):
+            # Aggregating and counting CWE occurrences
+            pipeline = [
+                {"$unwind": "$cwes"},
+                {"$group": {
+                    "_id": "$cwes",
+                    "count": {"$sum": 1}
+                }},
+                {"$sort": {"count": -1}},
+                {"$limit": 1}
+            ]
 
-# MongoEngine document definitions (User, VulnerableProduct, etc.) remain the same
-# ...
+            result = list(Vulnerability.objects.aggregate(*pipeline))
+            if result:
+                cwe, count = result[0]['_id'], result[0]['count']
+                print(f"The most common weakness last year was CWE-{cwe} with {count} occurrences.")
+            else:
+                print("No common weaknesses found.")
+
+        # Print the results
+        for i, result in enumerate(results):
+            print(f"{i+1}: {result['_id']['vendor']} {result['_id']['product']} has {result['count']} known exploits")
