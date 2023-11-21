@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
-from csec_data_analytics_app.models import Vulnerability
-
+from csec_data_analytics_app.utilities.nvd_client import NVDClient
 class Command(BaseCommand):
     help = 'Run queries to gather information about vulnerabilities.'
 

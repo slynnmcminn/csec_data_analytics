@@ -1,15 +1,27 @@
 import os
+import django
+import djongo
 import requests
 import json
 from datetime import datetime, timedelta
 from csec_data_analytics_app.models import Vulnerability, VulnerableProduct
+from django.core.management.base import BaseCommand
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'csec_data_analytics.settings')
+django.setup()
+class Command(BaseCommand):
+    help = 'Your command description here'
+
+    def handle(self, *args, **options):
+        # Your command logic goes here
+        self.stdout.write(self.style.SUCCESS('Command executed successfully'))
 
 class NVDClient:
     MAX_RESULTS_PER_REQUEST = 2000
 
     def __init__(self, delete_existing=False):
         self.api_url = "https://services.nvd.nist.gov/rest/json/cves/1.0"
-        self.nvd_api_key = os.environ.get("N18097da8-69a9-4369-bbea-443dfe35f9f1")
+        self.nvd_api_key = os.environ.get('NVD')
         self.headers = {'ApiKey': self.nvd_api_key}
         if delete_existing:
             Vulnerability.objects.delete()  # Clear existing data

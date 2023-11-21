@@ -1,4 +1,3 @@
-#cisa_client.py
 import requests
 import json
 from csec_data_analytics_app.models import Vulnerability

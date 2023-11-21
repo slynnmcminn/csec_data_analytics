@@ -6,6 +6,8 @@ class Command(BaseCommand):
     help = 'Identify the most common CWE from the past year'
 
     def handle(self, *args, **kwargs):
+        nvd_client = NVDClient(delete_existing=True)
+        nvd_client.run()
         one_year_ago = datetime.now() - timedelta(days=365)
         pipeline = [
             {'$match': {'date_published': {'$gte': one_year_ago}}},
