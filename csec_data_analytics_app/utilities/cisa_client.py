@@ -1,7 +1,6 @@
 import requests
-import json
-from csec_data_analytics_app.models import Vulnerability
 import logging
+from csec_data_analytics_app.models import Vulnerability
 
 class CISAClient:
     def __init__(self):
@@ -25,3 +24,7 @@ class CISAClient:
                 self.logger.error(f"Failed to fetch CISA data: HTTP {response.status_code}")
         except requests.RequestException as e:
             self.logger.error(f"Request error occurred: {e}")
+
+if __name__ == "__main__":
+    cisa_client = CISAClient()
+    cisa_client.run()

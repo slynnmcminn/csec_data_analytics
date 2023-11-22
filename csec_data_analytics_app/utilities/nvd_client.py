@@ -1,34 +1,24 @@
 import os
 import django
-import djongo
 import requests
 import json
 from datetime import datetime, timedelta
+from mongoengine import connect, disconnect
 from csec_data_analytics_app.models import Vulnerability, VulnerableProduct
-from django.core.management.base import BaseCommand
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'csec_data_analytics.settings')
-django.setup()
-class Command(BaseCommand):
-    help = 'Your command description here'
-
-    def handle(self, *args, **options):
-        # Your command logic goes here
-        self.stdout.write(self.style.SUCCESS('Command executed successfully'))
 
 class NVDClient:
     MAX_RESULTS_PER_REQUEST = 2000
 
     def __init__(self, delete_existing=False):
         self.api_url = "https://services.nvd.nist.gov/rest/json/cves/1.0"
-        self.nvd_api_key = os.environ.get('NVD')
+        self.nvd_api_key = os.environ.get('NVD_API_KEY', "a51fed55-0396-45ef-8f77-02315593734b")
         self.headers = {'ApiKey': self.nvd_api_key}
         if delete_existing:
             Vulnerability.objects.delete()  # Clear existing data
 
     def run(self):
         current_date = datetime.utcnow()
-        start_date = current_date - timedelta(days=365)  # Adjust for last year's data
+        start_date = current_date - timedelta(days=120)  # Adjust for the last 120 days
         params = {
             'resultsPerPage': self.MAX_RESULTS_PER_REQUEST,
             'pubStartDate': start_date.strftime('%Y-%m-%dT%H:%M:%S:000 UTC'),
@@ -70,15 +60,26 @@ class NVDClient:
             print(f"Error processing CVE ID {cve_id}: {e}")
 
     def get_attack_vector(self, item):
-        impact = item.get('impact', {})
-        if 'baseMetricV3' in impact:
-            return impact['baseMetricV3']['cvssV3']['attackVector']
-        elif 'baseMetricV2' in impact:
-            return impact['baseMetricV2']['cvssV2']['accessVector']
-        return 'UNKNOWN'
+        # Implementation for extracting attack vector
+        pass  # Placeholder, replace with your code logic
 
-    # ... rest of your existing methods ...
+    def get_vulnerable_products(self, item):
+        pass  # Placeholder, replace with your code logic
+
+    def get_cwes(self, item):
+        # Implementation for extracting CWEs
+        pass  # Placeholder, replace with your code logic
 
 if __name__ == "__main__":
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'csec_data_analytics.settings')
+    django.setup()
+
+    # Disconnect any existing connection before starting a new one
+    disconnect()
+    connect('django-mongo', host='localhost', port=27017)
+
     nvd_client = NVDClient(delete_existing=True)
     nvd_client.run()
+
+    # Disconnect from MongoDB after the script finishes
+    disconnect()
