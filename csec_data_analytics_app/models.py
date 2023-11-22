@@ -6,14 +6,16 @@ class VulnerableProduct(EmbeddedDocument):
 
 class Vulnerability(Document):
     cve_id = StringField(primary_key=True)
-    description = StringField()
+    description = StringField(required=True)
     vulnerable_products = ListField(EmbeddedDocumentField(VulnerableProduct))
     cwes = ListField(StringField())
-    attack_vector = StringField()
+    attack_vector = StringField(required=True)
     known_exploit = BooleanField(default=False)
     publishedDate = DateTimeField()
-    # Add other CVSS attributes as needed
+    cisa_exploitability_metric = StringField()
+    vulnerability_impact = EmbeddedDocumentField(VulnerabilityImpact)# Add other CVSS attributes as needed
 
+    meta = ('collection': 'vulnerability')
 class CVEVulnerability(Document):
     _id = StringField(primary_key=True)
     title = StringField()
@@ -23,3 +25,5 @@ class CVEVulnerability(Document):
     count = IntField()
     vulnerabilities = ListField(EmbeddedDocumentField(VulnerableProduct))
     source = StringField()  # Indicates the data source (e.g., 'NVD', 'CISA')
+
+    meta = ('collection': 'vulnerabilities')

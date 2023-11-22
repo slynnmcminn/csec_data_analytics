@@ -6,6 +6,9 @@ class Command(BaseCommand):
     help = 'Run queries against the NVD data'
 
     def handle(self, *args, **options):
+        self.get_attack_vector_count('NETWORK')
+        self.get_attack_vector_count('PHYSICAL')
+        self.get_top_products_with_known_exploit(50)
         self.query_google_chrome_vulnerabilities()
         self.query_attack_vector_count('NETWORK')
         self.query_attack_vector_count('PHYSICAL')
@@ -23,6 +26,8 @@ class Command(BaseCommand):
         self.stdout.write(f"Google Chrome vulnerabilities in the past 120 days: {count}")
 
     def query_attack_vector_count(self, attack_vector):
+        attack_vector_count = Vulnerability.objects(attack_vector=attack_vector).count()
+        print(f"There are {attack_vector_count} vulnerabilities with the attack vector {attack_vector}.")
         count = Vulnerability.objects(attack_vector=attack_vector).count()
         self.stdout.write(f"Vulnerabilities with the attack vector {attack_vector}: {count}")
 
