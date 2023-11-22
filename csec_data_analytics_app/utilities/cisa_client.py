@@ -26,12 +26,8 @@ class CISAClient:
             self.logger.error(f"Request error occurred: {e}")
 
 if __name__ == "__main__":
-    cisa_client = CISAClient()
-    cisa_client.run()
-
-    Vulnerability.objects(cve_id=cve_id).update_one(set__known_exploit=True)
-    self.logger.info(f"Updated CVE ID {cve_id} with known exploit flag")
-else:
-    self.logger.error(f"Failed to fetch CISA data: HTTP {response.status_code}")
-except requests.RequestException as e:
-self.logger.error(f"Request error occurred: {e}")
+    try:
+        cisa_client = CISAClient()
+        cisa_client.run()
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
