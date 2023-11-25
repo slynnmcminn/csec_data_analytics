@@ -1,5 +1,6 @@
+#project3_query_nvd.py
 from django.core.management.base import BaseCommand
-from csec_data_analytics_app.models import Vulnerability
+from csec_data_analytics_app.models import Vulnerability, VulnerableProduct, VulnerabilityImpact, CVEVulnerability, CVSSMetrics
 from datetime import datetime, timedelta
 
 class Command(BaseCommand):

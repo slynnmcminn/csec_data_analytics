@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
 from faker import Faker
-
 from csec_data_analytics_app.models import User, UserAddress
 
 

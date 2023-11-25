@@ -1,6 +1,7 @@
+#cisa_client.py
 import requests
 import logging
-from csec_data_analytics_app.models import Vulnerability
+from csec_data_analytics_app.models import Vulnerability, CVEVulnerability, CVSSMetrics, VulnerableProduct, VulnerabilityImpact
 
 class CISAClient:
     def __init__(self):
@@ -18,8 +19,10 @@ class CISAClient:
                 for item in data['vulnerabilities']:
                     cve_id = item.get('cveID')
                     if cve_id:
-                        Vulnerability.objects(cve_id=cve_id).update_one(set__known_exploit=True)
-                        self.logger.info(f"Updated CVE ID {cve_id} with known exploit flag")
+                        Vulnerability.objects(cve_id=cve_id).update_one(
+                            set__exploitability_metric=item.get('exploitabilityMetric')
+                        )
+                        self.logger.info(f"Updated CVE ID {cve_id} with exploitability metric")
             else:
                 self.logger.error(f"Failed to fetch CISA data: HTTP {response.status_code}")
         except requests.RequestException as e:
