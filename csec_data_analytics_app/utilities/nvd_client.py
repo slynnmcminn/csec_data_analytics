@@ -53,12 +53,10 @@ class NVDClient:
 
             # Check if description_data exists and has the 'value' field
             description_data = item['cve']['description']['description_data']
-            if not description_data or not description_data[0].get('value'):
-                print(f"Warning: No description available for CVE ID {cve_id}")
-                return  # Skip this entry and continue processing the next one
-
-            description = description_data[0]['value']
-
+            if description_data and 'value' in description_data[0]:
+                description = description_data[0]['value']
+            else:
+                description = "No description available"  # Default description
             # Check if cpe_configurations exists
             cpe_configurations = item.get('configurations', {}).get('nodes', [])
             if not cpe_configurations:
