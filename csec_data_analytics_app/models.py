@@ -1,22 +1,26 @@
-from mongoengine import Document, StringField, ListField, EmbeddedDocument, EmbeddedDocumentField, BooleanField, DateTimeField, IntField, FloatField
+import re
+from datetime import datetime
+from mongoengine import Document, StringField, ListField, EmbeddedDocument, EmbeddedDocumentField, BooleanField, DateTimeField, FloatField, IntField
 
 class CVSSMetrics(EmbeddedDocument):
     baseScore = FloatField()
     attackVector = StringField()
     attackComplexity = StringField()
-    # Add other CVSS attributes as needed
+    # ... other fields ...
 
 class VulnerabilityImpact(EmbeddedDocument):
     impact_score = StringField(required=True)
-    severity = StringField(required=True)
+    severity = StringField()
 
 class VulnerableProduct(EmbeddedDocument):
     vendor = StringField(required=True)
     product = StringField(required=True)
+    # Remove vulnerability_impact from here
 
 class Vulnerability(Document):
     cve_id = StringField(primary_key=True)
     description = StringField(required=True)
+    cpe_configurations = ListField(StringField())
     vulnerable_products = ListField(EmbeddedDocumentField(VulnerableProduct))
     cwes = ListField(StringField())
     attack_vector = StringField(required=True)
@@ -24,11 +28,14 @@ class Vulnerability(Document):
     publishedDate = DateTimeField()
     cisa_exploitability_metric = StringField()
     cvss_metrics = EmbeddedDocumentField(CVSSMetrics)
+    vulnerability_impact = EmbeddedDocumentField(VulnerabilityImpact)  # Correct placement
 
     meta = {
         'collection': 'vulnerabilities'
     }
 
+
+# Define the CVEVulnerability Document
 class CVEVulnerability(Document):
     _id = StringField(primary_key=True)
     title = StringField()
@@ -42,3 +49,38 @@ class CVEVulnerability(Document):
     meta = {
         'collection': 'cve_vulnerabilities'
     }
+
+# Query Functions
+def get_vulnerabilities_for_product(product_name):
+    product_name_regex = re.compile(re.escape(product_name), re.IGNORECASE)
+    vulnerability_count = Vulnerability.objects(vulnerable_products__product=product_name_regex).count()
+    print(f"There are {vulnerability_count} vulnerabilities for {product_name} (case-insensitive search).")
+
+def get_attack_vector_count(attack_vector):
+    attack_vector_count = Vulnerability.objects(cvss_metrics__attackVector=attack_vector).count()
+    print(f"There are {attack_vector_count} vulnerabilities with the attack vector {attack_vector}.")
+
+def get_most_common_weakness_last_year():
+    last_year = datetime.now().year - 1
+    start_last_year = datetime(last_year, 1, 1)
+    end_last_year = datetime(last_year, 12, 31)
+
+    pipeline = [
+        {"$match": {"publishedDate": {"$gte": start_last_year, "$lte": end_last_year}}},
+        {"$unwind": "$cwes"},
+        {"$group": {
+            "_id": "$cwes",
+            "count": {"$sum": 1}
+        }},
+        {"$sort": {"count": -1}},
+        {"$limit": 1}
+    ]
+
+    results = list(Vulnerability.objects().aggregate(*pipeline))
+    if results:
+        most_common_weakness = results[0]
+        print(f"The most common weakness is '{most_common_weakness['_id']}' with {most_common_weakness['count']} occurrences.")
+    else:
+        print("No weaknesses found.")
+
+# Additional code, functions, or class definitions can be added as required

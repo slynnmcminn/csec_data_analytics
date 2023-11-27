@@ -1,6 +1,6 @@
-#mine_cisa_data.py
+# mine_cisa_data.py
 from django.core.management.base import BaseCommand
-from csec_data_analytics_app.utilities.cisa_client import CISAClient
+from csec_data_analytics_app.management.commands.cisa_client import CISAClient
 
 class Command(BaseCommand):
     help = 'Extract data from the Department of Homeland Security CISA'
