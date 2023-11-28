@@ -59,19 +59,37 @@ class NVDClient:
         description_data = cve_data.get('description', {}).get('description_data', [])
         description = description_data[0]['value'] if description_data else "No description available"
 
+        # Extract CVSS metrics
         cvss_data = item.get('impact', {}).get('baseMetricV3', {}).get('cvssV3', {})
         cvss_metrics = CVSSMetrics(
             baseScore=cvss_data.get('baseScore'),
             attackVector=cvss_data.get('attackVector'),
             attackComplexity=cvss_data.get('attackComplexity')
-        )
+        )  # Added missing parenthesis here
 
+        # Extract vulnerable products
+        configurations = item.get('configurations', {}).get('nodes', [])
+        vulnerable_products = [VulnerableProduct(vendor=cpe_match.get('cpe23Uri').split(':')[3],
+                                                 product=cpe_match.get('cpe23Uri').split(':')[4])
+                               for node in configurations
+                               for cpe_match in node.get('cpe_match', [])
+                               if cpe_match.get('vulnerable', False)]
+
+        # Extract CWEs
+        cwes = [problemtype['description'][0]['value']
+                for problemtype in cve_data.get('problemtype', {}).get('problemtype_data', [])
+                if problemtype['description']]
+
+        # Store in the database
         Vulnerability.objects(cve_id=cve_id).update_one(
             upsert=True,
             set__description=description,
-            set__cvss_metrics=cvss_metrics
+            set__cvss_metrics=cvss_metrics,
+            set__vulnerable_products=vulnerable_products,
+            set__cwes=cwes,
+            set__known_exploit=False  # or your logic to determine this
         )
-        print(f"Processed CVE ID: {cve_id}")  # Debugging log
+        print(f"Processed CVE ID: {cve_id}")
 
 class Command(BaseCommand):
     help = 'Fetch data from NVD and update the database.'

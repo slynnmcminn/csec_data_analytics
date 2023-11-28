@@ -34,7 +34,6 @@ class Vulnerability(Document):
         'collection': 'vulnerabilities'
     }
 
-
 # Define the CVEVulnerability Document
 class CVEVulnerability(Document):
     _id = StringField(primary_key=True)
@@ -53,9 +52,13 @@ class CVEVulnerability(Document):
 # Query Functions
 def get_vulnerabilities_for_product(product_name):
     product_name_regex = re.compile(re.escape(product_name), re.IGNORECASE)
-    vulnerability_count = Vulnerability.objects(vulnerable_products__product=product_name_regex).count()
+    vulnerabilities = Vulnerability.objects(vulnerable_products__product=product_name_regex)
+    vulnerability_count = vulnerabilities.count()
     print(f"There are {vulnerability_count} vulnerabilities for {product_name} (case-insensitive search).")
 
+    # Debugging: Print out a few CVE IDs and descriptions
+    for vuln in vulnerabilities[:5]:
+        print(f"CVE ID: {vuln.cve_id}, Description: {vuln.description}")
 def get_attack_vector_count(attack_vector):
     attack_vector_count = Vulnerability.objects(cvss_metrics__attackVector=attack_vector).count()
     print(f"There are {attack_vector_count} vulnerabilities with the attack vector {attack_vector}.")
@@ -83,4 +86,27 @@ def get_most_common_weakness_last_year():
     else:
         print("No weaknesses found.")
 
-# Additional code, functions, or class definitions can be added as required
+def get_top_vendor_with_known_exploits_last_year():
+    last_year = datetime.now().year - 1
+    start_last_year = datetime(last_year, 1, 1)
+    end_last_year = datetime(last_year, 12, 31)
+    pipeline = [
+        {"$unwind": "$vulnerable_products"},
+        {"$match": {
+            "known_exploit": True,
+            "publishedDate": {"$gte": start_last_year, "$lte": end_last_year}
+            }},
+        {"$group": {
+            "_id": {
+                "vendor": "$vulnerable_products.vendor",
+                "product": "$vulnerable_products.product"
+            },
+            "count": {"$sum": 1}
+        }},
+        {"$sort": {"count": -1}},
+        {"$limit": 1}
+    ]
+    results = list(Vulnerability.objects().aggregate(*pipeline))
+    for i, result in enumerate(results):
+        print(
+            f"{i + 1}: {result['_id']['vendor']} {result['_id']['product']} has {result['count']} known exploits")
