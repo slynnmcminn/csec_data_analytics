@@ -1,6 +1,5 @@
 import requests
 import logging
-from django.core.management.base import BaseCommand
 from csec_data_analytics_app.models import Vulnerability
 
 class CISAClient:
@@ -19,26 +18,14 @@ class CISAClient:
                 for item in data['vulnerabilities']:
                     cve_id = item.get('cveID')
                     exploitability_metric = item.get('exploitabilityMetric')
-                    if cve_id and exploitability_metric:
+                    if cve_id:
+                        # Update known_exploit to True for CVEs found in CISA data
                         Vulnerability.objects(cve_id=cve_id).update_one(
+                            set__known_exploit=True,
                             set__cisa_exploitability_metric=exploitability_metric
                         )
-                        self.logger.info(f"Updated CVE ID {cve_id} with exploitability metric: {exploitability_metric}")
+                        self.logger.info(f"Updated CVE ID {cve_id} with known exploit and exploitability metric: {exploitability_metric}")
             else:
                 self.logger.error(f"Failed to fetch CISA data: HTTP {response.status_code}")
         except requests.RequestException as e:
             self.logger.error(f"Request error occurred: {e}")
-
-class Command(BaseCommand):
-    help = 'Updates vulnerabilities with CISA exploitability metrics.'
-
-    def handle(self, *args, **options):
-        cisa_client = CISAClient()
-        cisa_client.run()
-
-if __name__ == "__main__":
-    try:
-        cisa_client = CISAClient()
-        cisa_client.run()
-    except Exception as e:
-        logging.error(f"An error occurred: {e}")

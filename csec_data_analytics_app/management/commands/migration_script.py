@@ -1,50 +1,43 @@
-import mongoengine
+from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand
-from mongoengine import Document, StringField, FloatField, ListField, connect
+import mongoengine
+from mongoengine import Document, StringField, FloatField, ListField, connect, disconnect
 
-# Connect to the source databases
-connect(alias='db1', name='django-mongo-vulnerability', host='mongodb://host1:27017/dbname1')
-connect(alias='db2', name='djongo_mongo-vulnerabilities', host='mongodb://host2:27017/dbname2')
+# Correct database name and alias based on your MongoDB setup
+db_name = 'django-mongo'
+db_alias = 'default'
 
-class SourceVulnerability(Document):
-    # Example fields for the first source collection
+# Connect to the 'django-mongo' database
+disconnect(alias=db_alias)
+connect(alias=db_alias, db=db_name, host='mongodb://127.0.0.1:27017/' + db_name)
+
+# Document class to match the structure of your 'vulnerabilities' collection
+class Vulnerability(Document):
+    # Define fields that match the structure of your MongoDB collection
     cve_id = StringField(primary_key=True)
     description = StringField()
-    reported_date = StringField()  # Example: change to the actual field and type
+    reported_date = StringField()  # Use DateTimeField if the date is stored in DateTime format
     severity = StringField()
+    product = StringField()
+    attack_vector = StringField()
+    reported_date = DateTimeField()  # Changed from StringField to DateTimeField
 
     meta = {
-        'collection': 'source_collection_name_1',  # Replace with the actual collection name
-        'db_alias': 'db1'  # Alias for the source database
-    }
-
-class SourceVulnerability2(Document):
-    # Example fields for the second source collection
-    cve_id = StringField(primary_key=True)
-    description = StringField()
-    impact_score = FloatField()  # Example field
-    vendors_affected = ListField(StringField())  # Example field
-
-    meta = {
-        'collection': 'source_collection_name_2',  # Replace with the actual collection name
-        'db_alias': 'db2'  # Alias for the source database
+        'collection': 'vulnerabilities',  # Make sure this is the correct collection name
+        'db_alias': 'default'
     }
 
 class Command(BaseCommand):
-    help = 'Migrate data from one MongoDB collection to another'
+    help = 'Perform data analysis on vulnerabilities'
 
     def handle(self, *args, **kwargs):
         try:
-            # Migrate data from source collection 1
-            for source_vuln in SourceVulnerability.objects.using('db1').all():
-                # Migration logic for collection 1
-                pass  # Replace with your actual logic
-
-            # Migrate data from source collection 2
-            for source_vuln in SourceVulnerability2.objects.using('db2').all():
-                # Migration logic for collection 2
-                pass  # Replace with your actual logic
-
-            self.stdout.write(self.style.SUCCESS('Data migration completed successfully.'))
+            # Example query: Count vulnerabilities of Google Chrome in the past 120 days
+            cutoff_date = datetime.now() - timedelta(days=120)
+            chrome_vulns_count = Vulnerability.objects(
+                product="Chrome",
+                reported_date__gte=cutoff_date
+            ).count()
+            self.stdout.write(f'Number of Google Chrome vulnerabilities in the past 120 days: {chrome_vulns_count}')
         except mongoengine.errors.MongoEngineException as e:
-            self.stderr.write(f'An error occurred during migration: {e}')
+            self.stderr.write(f'An error occurred: {e}')

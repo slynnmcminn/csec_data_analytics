@@ -48,7 +48,16 @@ class CVEVulnerability(Document):
     meta = {
         'collection': 'cve_vulnerabilities'
     }
+from django.db import models
 
+class CisaVulnerability(models.Model):
+    cve_id = models.CharField(max_length=20, unique=True)
+    description = models.TextField()
+    cvss_score = models.FloatField()
+    # Add more fields as needed
+
+    def __str__(self):
+        return self.cve_id
 # Query Functions
 def get_vulnerabilities_for_product(product_name):
     product_name_regex = re.compile(re.escape(product_name), re.IGNORECASE)

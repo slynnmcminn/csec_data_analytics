@@ -1,4 +1,3 @@
-# mine_cisa_data.py
 from django.core.management.base import BaseCommand
 from csec_data_analytics_app.management.commands.cisa_client import CISAClient
 
