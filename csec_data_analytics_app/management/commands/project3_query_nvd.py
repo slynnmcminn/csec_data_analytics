@@ -1,15 +1,11 @@
 from django.core.management.base import BaseCommand
-from csec_data_analytics_app.management.commands.vulnerability_queries_helpers import (
-    get_vulnerabilities_for_product,
-    get_attack_vector_count,
-    get_most_common_weakness_last_year
-)
+import csec_data_analytics_app.utilities.vulnerability_queries as vuln_queries
+
+
 
 class Command(BaseCommand):
-    help = 'Run queries against the NVD data'
+    help = 'Describes what your command does.'
 
-    def handle(self, *args, **options):
-        get_vulnerabilities_for_product("Chrome")
-        get_attack_vector_count('NETWORK')
-        get_attack_vector_count('PHYSICAL')
-        get_most_common_weakness_last_year()
+    def handle(self, *args, **kwargs):
+        vuln_queries.get_attack_vector_count(attack_vector='PHYSICAL')
+        vuln_queries.get_top_products_with_known_exploit(top_n=50)
