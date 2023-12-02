@@ -1,6 +1,7 @@
+# File: project3_mine_nvd.py
+
 from django.core.management.base import BaseCommand
 from csec_data_analytics_app.utilities.nvd_client import NVDClient
-
 
 class Command(BaseCommand):
     help = 'Describes what your command does.'

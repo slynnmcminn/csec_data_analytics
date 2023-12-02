@@ -9,12 +9,39 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import mongoengine
 from pathlib import Path
 from mongoengine import connect
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Disconnect the existing MongoDB connection with alias 'default'
+mongoengine.disconnect(alias='default')
+
+# Connect to the database using mongoengine
+mongoengine.connect(
+    db='django_mongo',  # Replace with your database name
+    host='localhost',   # Replace with your MongoDB host
+    port=27017,         # Replace with your MongoDB port
+)
+
+# ...
+
+# Continue with the rest of your settings
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Disconnect the existing MongoDB connection with alias 'default'
+mongoengine.disconnect(alias='default')
+
+# Connect to the database using mongoengine
+mongoengine.connect(
+    db='django_mongo',  # Replace with your database name
+    host='localhost',   # Replace with your MongoDB host
+    port=27017,         # Replace with your MongoDB port
+)
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -28,7 +55,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mongo',
+        'NAME': 'django-mongo',  # Replace with your database name
+        'HOST': 'localhost',     # Replace with your MongoDB host
+        'PORT': 27017,           # Replace with your MongoDB port
+    }
+}
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,7 +73,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'csec_data_analytics_app',
-    'csec_data_analytics_app.apps.CsecDataAnalyticsAppConfig',
     'rest_framework',
     'mongoengine',
     'rest_framework_mongoengine',
@@ -75,6 +108,11 @@ TEMPLATES = [
     },
 ]
 
+mongoengine.connect(
+    db='django_mongo',  # Replace with your database name
+    host='localhost',   # Replace with your MongoDB host
+    port=27017,         # Replace with your MongoDB port
+)
 WSGI_APPLICATION = 'csec_data_analytics.wsgi.application'
 
 
@@ -133,7 +171,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Mongoengine configuration
 _MONGODB_DATABASE_HOST = \
     'mongodb://%s:%s@%s/%s?retryWrites=true&w=majority' \
-    % ('admin', 'put5gwz2bjx9phe!TUD', 'localhost', 'django-mongo')
+    % ('admin', 'put5gwz2bjx9phe!TUD', 'localhost', 'django_mongo')
+
 
 connect(host=_MONGODB_DATABASE_HOST)
 
