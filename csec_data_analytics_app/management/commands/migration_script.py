@@ -4,8 +4,8 @@ import mongoengine
 from mongoengine import Document, StringField, FloatField, ListField, connect, disconnect
 
 # Correct database name and alias based on your MongoDB setup
-db_name = 'django-mongo'
-db_alias = 'default'
+db_name = client['django-mongo']
+db_alias = "default"
 
 # Connect to the 'django-mongo' database
 disconnect(alias=db_alias)

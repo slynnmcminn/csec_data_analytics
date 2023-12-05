@@ -1,6 +1,5 @@
 import requests
 
-# Replace 'your_api_key' with your actual NVD API key
 NVD_API_KEY = 'your_api_key'
 
 response = requests.get(
