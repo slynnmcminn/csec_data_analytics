@@ -1,17 +1,10 @@
 import os
 import requests
 import json
-import logging
-import time
 from datetime import datetime, timedelta
+
 from csec_data_analytics_app.models import Vulnerability, VulnerableProduct
 
-date_format = "%Y-%m-%dT%H:%M:%S%z"
-change_start_date = datetime.now().strftime(date_format)
-logging.basicConfig(level=logging.INFO)
-
-# Define the number of requests allowed per minute
-requests_per_minute = 60  # Adjust this based on the API rate limit
 
 class NVDClient:
     MAX_RESULTS_PER_REQUEST = 2000
@@ -20,56 +13,64 @@ class NVDClient:
         to_date = datetime.utcnow()
         from_date = to_date - timedelta(days=120)
         self.api_url = f'https://services.nvd.nist.gov/rest/json/cves/2.0?lastModStartDate={from_date.isoformat()}&' \
-                       f'lastModEndDate={to_date.isoformat()}&resultsPerPage=1000'  # Adjust resultsPerPage as needed
-        nvd_api_key = os.environ.get('NVD_API_KEY')  # Replace with your actual NVD API key
-        self.header = {'apikey': '03111f42-0b1f-4eea-9757-db53b8b43463'}
+                       f'lastModEndDate={to_date.isoformat()}'
+        nvd_api_key = os.environ.get('NVD_API_KEY')
+        self.header = {'apikey': '75784160-21fd-4f68-bcb4-9f8cb3284d6b'}
         self.cves = []
+        # Purge any existing records in Mongo before storing
         if delete_existing:
             Vulnerability.objects.all().delete()
 
-    def run(self, total_requests):
+    def run(self):
         next_index = 0
         fetch_next = True
-        for i in range(total_requests):
+        while fetch_next:
             fetch_next, next_index = self._fetch_vulnerabilities(start_index=next_index)
-            if not fetch_next:
-                break
         self._store_vulnerabilities()
 
     def _fetch_vulnerabilities(self, start_index=0):
-        base_url = "https://services.nvd.nist.gov/rest/json/cves/2.0"
-        parameters = {
-            "resultsPerPage": self.MAX_RESULTS_PER_REQUEST,
-            "startIndex": start_index
-        }
-        response = requests.get(self.api_url, headers=self.header, params=parameters)
+        """
+        Fetch vulnerabilities starting from the provided index.
+
+        Args:
+        - start_index (int): The index to start fetching from.
+
+        Returns:
+        - tuple(bool, int): A tuple containing a boolean indicating if more vulnerabilities
+                            should be fetched, and the next index to start from.
+        """
+        response = requests.get(f"{self.api_url}&startIndex={start_index}", headers=self.header)
         if response.status_code != 200:
             response.raise_for_status()
 
         returned_content = json.loads(response.content)
-        self.cves += returned_content.get('result', {}).get('CVE_Items', [])
-        next_index = start_index + self.MAX_RESULTS_PER_REQUEST
-        fetch_next = True if next_index < returned_content.get('totalResults', 0) else False
+        self.cves += returned_content['vulnerabilities']
+        next_index = returned_content['startIndex'] + self.MAX_RESULTS_PER_REQUEST
+        fetch_next = True if next_index < returned_content['totalResults'] else False
         return fetch_next, next_index
 
     def _store_vulnerabilities(self):
         for cve in self.cves:
-            if 'cve' in cve and 'CVE_data_meta' in cve['cve']:
-                cve_id = cve['cve']['CVE_data_meta']['ID']
-                description = cve['cve']['description']['description_data'][0]['value'] if 'description' in cve['cve'] else ''
-                attack_vector = cve['impact']['baseMetricV3']['cvssV3']['attackVector'] if 'impact' in cve else ''
-                known_exploit = 'exploit' in cve
+            if cve['cve'].get('vulnStatus', None) != 'Rejected':
+                # Logic for extracting the CVE
+                cve_id = cve['cve']['id']
+                description = None
+                for item in cve['cve']['descriptions']:
+                    if item['lang'] == 'en':
+                        description = item['value']
+                        break
 
-                vulnerable_products = []
-                if 'configurations' in cve:
-                    for node in cve['configurations']['nodes']:
-                        for cpe_match in node.get('cpe_match', []):
-                            cpe_parts = cpe_match.get('cpe23Uri', '').split(':')
-                            if len(cpe_parts) >= 5:
-                                vendor = cpe_parts[3]
-                                product = cpe_parts[4]
-                                vulnerable_products.append(VulnerableProduct(vendor=vendor, product=product))
+                attack_vector = self._get_cvss_metrics(cve['cve']['metrics'])
+                if not attack_vector:
+                    continue
 
+                known_exploit = bool(cve['cve'].get('cisaExploitAdd'))
+
+                vulnerable_products = self._get_cve_configurations(cve['cve'])
+                if not vulnerable_products:
+                    continue
+
+                # Store the Vulnerability Object
                 vulnerability = Vulnerability(
                     cve_id=cve_id,
                     description=description,
@@ -79,8 +80,43 @@ class NVDClient:
                 )
                 vulnerability.save()
 
-if __name__ == "__main__":
-    total_requests = 100  # Replace with the actual number of requests you want to make
-    nvd_client = NVDClient(delete_existing=True)  # Create an instance of NVDClient
-    nvd_client.run(total_requests)
-    print("Finished fetching and storing vulnerabilities.")
+    def _get_cvss_metrics(self, metrics):
+        """
+        Used for extracting CVSS metrics. Right now, this just extracts the attack vector, but the function can be
+        expanded to extract all CVSS metrics
+        :param metrics: CVE metrics from the NVD
+        :return: Extracted CVE metrics or None if no metrics were found
+        """
+        attack_vector = None
+        if 'cvssMetricV31' in metrics:
+            attack_vector = metrics['cvssMetricV31'][0]['cvssData']['attackVector']
+        elif 'cvssMetricV2' in metrics:
+            attack_vector = metrics['cvssMetricV2'][0]['cvssData']['accessVector']
+
+        return attack_vector
+
+    def _get_cve_configurations(self, cve):
+        """
+        From the NVD cve json object, extract all the configurations into MongoEngine VulnerableProduct objects
+        :param cve: cve json record from NVD
+        :return: A list of vulnerable product objects or None if no configurations exist.
+        """
+        vendor_products = []
+        if 'configurations' in cve:
+            for configuration in cve['configurations']:
+                for node in configuration['nodes']:
+                    for cpe_match in node['cpeMatch']:
+                        cpe_parts = cpe_match['criteria'].split(':')
+                        vendor = cpe_parts[3]
+                        product = cpe_parts[4]
+                        if (vendor, product) not in vendor_products:
+                            vendor_products.append((vendor, product))
+        else:
+            return None
+
+        vulnerable_products = []
+        for vendor_product in vendor_products:
+            vulnerable_products.append(
+                VulnerableProduct(vendor=vendor_product[0], product=vendor_product[1])
+            )
+        return vulnerable_products

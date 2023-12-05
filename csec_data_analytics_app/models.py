@@ -1,54 +1,37 @@
-from mongoengine import Document, StringField, EmailField, EmbeddedDocument, IntField, EmbeddedDocumentField, DateField, EmbeddedDocumentListField, BooleanField, ListField
+from mongoengine import Document, StringField, EmailField, EmbeddedDocument, IntField, EmbeddedDocumentField, \
+    EmbeddedDocumentListField, BooleanField, ListField
+
 
 class UserAddress(EmbeddedDocument):
-    street = StringField(required=True)
-    city = StringField(required=True)
-    state = StringField(required=True)
-    country = StringField(required=True)
-    zip = IntField(required=True)
+    street = StringField(required=True, null=False)
+    city = StringField(required=True, null=False)
+    state = StringField(required=True, null=False)
+    country = StringField(required=True, null=False)
+    zip = IntField(required=True, null=False)
+
 
 class User(Document):
-    first_name = StringField(required=True)
-    last_name = StringField(required=True)
-    email = EmailField(required=True)
+    # mongoengine defaults to allow null
+    first_name = StringField(required=True, null=False)
+    last_name = StringField(required=True, null=False)
+    email = EmailField(required=True, null=False)
     address = EmbeddedDocumentField(UserAddress, required=True)
 
+
 class VulnerableProduct(EmbeddedDocument):
-    vendor = StringField(required=True)
-    product = StringField(required=True)
+    vendor = StringField(required=True, null=False)
+    product = StringField(required=True, null=False)
+
 
 class VulnerabilityImpact(EmbeddedDocument):
-    impacts = ListField(default=list)
+    impacts = ListField(null=True)
     validated = BooleanField(default=False)
 
-class Vulnerability(Document):
-    cve_id = StringField(required=True)
-    description = StringField(required=True)
-    attack_vector = StringField(required=True)
-    known_exploit = BooleanField(required=True)
-    vulnerable_products = EmbeddedDocumentListField(VulnerableProduct, required=True)
-    vulnerability_impact = EmbeddedDocumentField(VulnerabilityImpact)
 
-class CVEVulnerability(Document):
-    cve_id = StringField(required=True)
-    description = StringField(required=True)
-    attack_vector = StringField(required=True)
-    known_exploit = BooleanField(required=True)
-    vulnerable_products = EmbeddedDocumentListField(VulnerableProduct, required=True)
-    vulnerability_impact = EmbeddedDocumentField(VulnerabilityImpact)
-    cpe_name = StringField()
-    vendor_project = StringField(required=True)
-    vulnerability_name = StringField(required=True)
-    date_added = DateField()
-    short_description = StringField(required=True)
-    required_action = StringField(required=True)
-    due_date = DateField()
-    cvss_v3_metrics = StringField(required=True)
-    cvss_v2_severity = StringField()
-    cvss_v3_severity = StringField()
-    cwe_id = StringField(required=True)
-    is_vulnerable = BooleanField()
-    pub_start_date = DateField(required=True)
-    pub_end_date = DateField(required=True)
-    known_ransomware_campaign_use = StringField()
-    notes = StringField()
+class Vulnerability(Document):
+    cve_id = StringField(required=True, null=False)
+    description = StringField(required=True, null=False)
+    attack_vector = StringField(required=True, null=False)
+    known_exploit = BooleanField(required=True, null=False)
+    vulnerable_products = EmbeddedDocumentListField(VulnerableProduct, required=True, null=False)
+    vulnerability_impact = EmbeddedDocumentField(VulnerabilityImpact, required=False, null=True)
