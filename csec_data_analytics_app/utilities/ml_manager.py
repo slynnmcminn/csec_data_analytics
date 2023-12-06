@@ -9,7 +9,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.model_selection import cross_val_score
-
+from sklearn.metrics import accuracy_score, classification_report
 from csec_data_analytics_app.models import Vulnerability
 
 
@@ -48,8 +48,15 @@ class MLManager:
         # Create the RF Classifier
         self.clf = RandomForestClassifier(n_estimators=100)
         self.clf.fit(self.x_train, self.y_train)
-        self.feature_names = self.column_transformer.get_feature_names()
 
+        # Make predictions
+        y_pred = self.clf.predict(self.x_test)
+
+        # Evaluate the model
+        print("Accuracy:", accuracy_score(self.y_test, y_pred))
+        print("Classification Report:\n", classification_report(self.y_test, y_pred))
+
+        # Existing methods
         self._get_confusion_matrix()
         self._get_feature_importance()
         self._cross_validation()
