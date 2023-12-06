@@ -1,5 +1,5 @@
 from mongoengine import Document, StringField, EmailField, EmbeddedDocument, IntField, EmbeddedDocumentField, \
-    EmbeddedDocumentListField, BooleanField, ListField
+    EmbeddedDocumentListField, BooleanField, ListField, DateTimeField
 
 
 class UserAddress(EmbeddedDocument):
@@ -22,11 +22,12 @@ class VulnerableProduct(EmbeddedDocument):
     vendor = StringField(required=True, null=False)
     product = StringField(required=True, null=False)
 
-
 class VulnerabilityImpact(EmbeddedDocument):
     impacts = ListField(null=True)
     validated = BooleanField(default=False)
 
+class Weakness(EmbeddedDocument):
+    type = StringField()  # This field represents the type of weakness
 
 class Vulnerability(Document):
     cve_id = StringField(required=True, null=False)
@@ -35,3 +36,6 @@ class Vulnerability(Document):
     known_exploit = BooleanField(required=True, null=False)
     vulnerable_products = EmbeddedDocumentListField(VulnerableProduct, required=True, null=False)
     vulnerability_impact = EmbeddedDocumentField(VulnerabilityImpact, required=False, null=True)
+    weakness = EmbeddedDocumentField(Weakness)  # Embed the Weakness document in Vulnerability
+    date_added = DateTimeField()
+
