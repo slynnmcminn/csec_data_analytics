@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.urls import path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-
 from csec_data_analytics_app.views.views_vulnerability import VulnerabilityList, VulnerabilityDetail
 
 urlpatterns = [

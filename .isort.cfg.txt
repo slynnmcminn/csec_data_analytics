@@ -1,0 +1,24 @@
+# .isort.cfg
+
+[settings]
+force_single_line = True
+use_parentheses = True
+line_length = 88
+
+sections = FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
+
+known_third_party = django,requests
+known_first_party = csec_data_analytics
+
+include_trailing_comma = True
+multi_line_output = 3
+combine_as_imports = True
+
+import_heading_stdlib = Standard Library
+import_heading_thirdparty = Third-Party Library
+import_heading_firstparty = csec_data_analytics
+import_heading_localfolder = Local Imports
+
+order_by_type = True
+use_hanging_indent = True
+
