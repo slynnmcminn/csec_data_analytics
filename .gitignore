@@ -69,7 +69,7 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+csec_data_analytics_app/management/commands/docs/_build/
 
 # PyBuilder
 .pybuilder/
