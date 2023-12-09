@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'mongoengine',
     'rest_framework_mongoengine',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,8 @@ _MONGODB_DATABASE_HOST = \
     % ('admin', 'put5gwz2bjx9phe!TUD', 'localhost', 'django-mongo')
 
 connect(host=_MONGODB_DATABASE_HOST)
+
+# Used to generate OpenAPI schemas
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}

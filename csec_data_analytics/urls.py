@@ -15,8 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from csec_data_analytics_app.views.views_vulnerability import Vulnerability
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
+from csec_data_analytics_app.views.views_vulnerability import VulnerabilityList, VulnerabilityDetail
 
 urlpatterns = [
-    path('vulnerability/', Vulnerability.as_view(), name='vulnerability'),
+    path('vulnerability/', VulnerabilityList.as_view(), name='vulnerability-list'),
+    path('vulnerability/<str:cve_id>/', VulnerabilityDetail.as_view(), name='vulnerability-detail'),
+    path('schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]
