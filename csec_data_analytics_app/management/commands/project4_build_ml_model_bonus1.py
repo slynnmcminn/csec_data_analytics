@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand
+import BaseCommand
 import pandas as pd
 from mongoengine import connect, disconnect
 from csec_data_analytics_app.models import Vulnerability
@@ -84,4 +84,3 @@ class Command(BaseCommand):
        if perform_cross_validation:
            scores = cross_val_score(clf, X_resampled, y_resampled, cv=5)
            print(f"Random Forest Cross-validation scores: {scores}")
-

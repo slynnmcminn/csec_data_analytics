@@ -13,7 +13,7 @@ class NVDClient:
         to_date = datetime.utcnow()
         from_date = to_date - timedelta(days=120)
         self.api_url = f'https://services.nvd.nist.gov/rest/json/cves/2.0?lastModStartDate={from_date.isoformat()}&lastModEndDate={to_date.isoformat()}'
-        self.header = {'apikey': os.environ.get('NVD_API_KEY', '75784160-21fd-4f68-bcb4-9f8cb3284d6b')}
+        self.header = {'apikey': os.environ.get('NVD_API_KEY', '1cea2b5e-8346-4497-837c-b4c09f80ee1e')}
         self.cves = []
         if delete_existing:
             Vulnerability.objects.all().delete()
