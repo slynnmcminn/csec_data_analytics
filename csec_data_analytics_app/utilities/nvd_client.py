@@ -83,14 +83,13 @@ class NVDClient:
                     print(f"Skipping CVE {cve_id} due to missing data")
                     continue  # Skip this CVE
 
-                # Create and save the Vulnerability object
                 Vulnerability.objects.create(
-                    cve_id=cve_id,
-                    description=description,
-                    attack_vector=attack_vector,
-                    known_exploit=known_exploit,
-                    cvss_score=cvss_score,
-                    vulnerable_products=vulnerable_products
+                    cve_id=extracted_data['cve_id'],
+                    description=extracted_data['description'],
+                    cvss_score=extracted_data['cvss_score'],
+                    attack_vector=extracted_data['attack_vector'],
+                    known_exploit=extracted_data['known_exploit'],
+                    vulnerable_products=["list", "of", "products"]  # Update this with actual data
                 )
 
     def _get_cvss_score(self, impact_data):

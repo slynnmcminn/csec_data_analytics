@@ -1,5 +1,5 @@
 from mongoengine import Document, StringField, EmailField, EmbeddedDocument, IntField, EmbeddedDocumentField, \
-   EmbeddedDocumentListField, BooleanField, ListField, DateTimeField
+   EmbeddedDocumentListField, BooleanField, ListField, DateTimeField, FloatField
 
 
 
@@ -47,3 +47,4 @@ class Vulnerability(Document):
    vulnerability_impact = EmbeddedDocumentField(VulnerabilityImpact, required=False, null=True)
    weakness = EmbeddedDocumentField(Weakness)  # Embed the Weakness document in Vulnerability
    date_added = DateTimeField()
+   cvss_score = FloatField()

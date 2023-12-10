@@ -8,13 +8,9 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'default-secret-key')
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-_MONGODB_USER = os.environ.get('MONGODB_USER', 'admin')
-_MONGODB_PASSWD = os.environ.get('MONGODB_PASSWD', 'your-default-password')
 _MONGODB_HOST = os.environ.get('MONGODB_HOST', 'localhost')
 _MONGODB_NAME = os.environ.get('MONGODB_NAME', 'django-mongo')
-_MONGODB_DATABASE_HOST = (
-    f'mongodb://{_MONGODB_USER}:{_MONGODB_PASSWD}@{_MONGODB_HOST}/{_MONGODB_NAME}?retryWrites=true&w=majority'
-)
+_MONGODB_DATABASE_HOST = f'mongodb://{_MONGODB_HOST}/{_MONGODB_NAME}'
 
 connect(host=_MONGODB_DATABASE_HOST)
 
