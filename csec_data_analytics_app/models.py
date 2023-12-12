@@ -1,18 +1,24 @@
+
+
 from mongoengine import EmailField, IntField, BooleanField, FloatField, Document, EmbeddedDocument, EmbeddedDocumentListField, StringField, URLField, DictField, DecimalField, DateTimeField, ListField, EmbeddedDocumentField
 
-class UserAddress(EmbeddedDocument):
-   street = StringField(required=True, null=False)
-   city = StringField(required=True, null=False)
-   state = StringField(required=True, null=False)
-   country = StringField(required=True, null=False)
-   zip = IntField(required=True, null=False)
 
-class User(Document):
-   # mongoengine defaults to allow null
-   first_name = StringField(required=True, null=False)
-   last_name = StringField(required=True, null=False)
-   email = EmailField(required=True, null=False)
-   address = EmbeddedDocumentField(UserAddress, required=True)
+class CPEConfiguration(EmbeddedDocument):
+   part = StringField(required=True)
+   vendor = StringField(required=True)
+   product = StringField(required=True)
+   version = StringField()
+
+class CWE(EmbeddedDocument):
+   id = StringField(required=True)
+   description = StringField()
+
+
+class CVSSAttributes(EmbeddedDocument):
+   base_score = DecimalField(required=True, precision=2)
+   exploitability_score = DecimalField(precision=2)
+   impact_score = DecimalField(precision=2)
+   vector = StringField()
 
 class VulnerableProduct(EmbeddedDocument):
    vendor = StringField(required=True, null=False)
@@ -85,4 +91,16 @@ class Vulnerability(Document):
    impact = EmbeddedDocumentField(Impact)
    publishedDate = DateTimeField()
    lastModifiedDate = DateTimeField()
+   cpe_configurations = ListField(EmbeddedDocumentField(CPEConfiguration))
+   cwes = ListField(EmbeddedDocumentField(CWE))
+   exploitability_metric = StringField()
+   cvss_attributes = EmbeddedDocumentField(CVSSAttributes)
+   cisa_exploitability_metric = StringField()
+   published_date = StringField()
+   last_modified_date = StringField()
+   source = StringField()
+   references = ListField(StringField())
+   affected_vendors = ListField(StringField())
+   is_exploited = BooleanField(default=False)
 
+meta = {'collection': 'vulnerabilities'}

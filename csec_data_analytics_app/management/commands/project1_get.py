@@ -1,8 +1,6 @@
 from django.core.management.base import BaseCommand
 import time
-
 from csec_data_analytics_app.models import User, UserAddress
-
 
 class Command(BaseCommand):
     help = 'Creates many documents in the MongoDB database.'

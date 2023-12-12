@@ -24,11 +24,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_spectacular',
     'csec_data_analytics_app.apps.CsecDataAnalyticsAppConfig',
     'rest_framework',
     'mongoengine',
     'rest_framework_mongoengine',
-    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
