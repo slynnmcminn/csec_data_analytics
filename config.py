@@ -1,1 +1,1 @@
-NVD_API_KEY = '1cea2b5e-8346-4497-837c-b4c09f80ee1e'
+NVD_API_KEY = '81f62c1b-95c4-4ef2-ad40-cd3d1850bbb6'
