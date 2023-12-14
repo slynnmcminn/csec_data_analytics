@@ -4,21 +4,18 @@ from django.conf import settings
 from mongoengine import connect, disconnect
 from csec_data_analytics_app.models import Vulnerability
 
-class Command(BaseCommand):
-    help = 'Describes what your command does.'
+help = 'Fetches data from NVD and stores in MongoDB.'
 
-    def handle(self, *args, **kwargs):
-        print("Database settings:", settings.DATABASES)
-        nvd_client = NVDClient(delete_existing=True)
-        nvd_client.run()
+def handle(self, *args, **kwargs):
+    # Connect to MongoDB using settings from settings.py
+    connect(host=settings.MONGO_DB_URI, alias='default')
 
-        # Connect to MongoDB
-        disconnect()
-        connect('django-mongo')
+    # Rest of your code to fetch and store data
+    nvd_client = NVDClient(delete_existing=True)
+    nvd_client.run()
 
-        # Attempt to fetch data
-        vulnerabilities = Vulnerability.objects.all()
-        if not vulnerabilities:
-            print("No data found in the Vulnerability collection")
-        else:
-            print(f"Found {len(vulnerabilities)} records in the Vulnerability collection")
+    vulnerabilities = Vulnerability.objects.all()
+    if not vulnerabilities:
+        print("No data found in the Vulnerability collection")
+    else:
+        print(f"Found {len(vulnerabilities)} records in the Vulnerability collection")
