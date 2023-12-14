@@ -3,16 +3,18 @@ import requests
 import json
 from datetime import datetime, timedelta
 import time
-from csec_data_analytics_app.models import Vulnerability, VulnerableProduct
+from csec_data_analytics_app.models import Vulnerability, VulnerableProduct, BaseMetricV3, CVEData, CWE, CVSSAttributes, CPEConfiguration, DescriptionData, Impact, ProblemTypeData, ReferenceData, VulnerabilityImpact, Weakness, CVEDataMeta
 
 class NVDClient:
     MAX_RESULTS_PER_REQUEST = 2000
 
     def __init__(self, delete_existing=False):
         to_date = datetime.utcnow()
-        from_date = to_date - timedelta(days=120)
-        self.api_url = f'https://services.nvd.nist.gov/rest/json/cves/2.0?lastModStartDate={from_date.isoformat()}&lastModEndDate={to_date.isoformat()}'
-        self.header = {'apikey': os.environ.get('NVD_API_KEY', '81f62c1b-95c4-4ef2-ad40-cd3d1850bbb6')}
+        from_date = to_date - timedelta(days=365)
+        self.api_url = f'https://services.nvd.nist.gov/rest/json/cves/2.0?lastModStartDate={from_date.isoformat()}&' \
+                       f'lastModEndDate={to_date.isoformat()}'
+        nvd_api_key = os.environ.get('NVD_API_KEY')
+        self.header = {'apikey':'81f62c1b-95c4-4ef2-ad40-cd3d1850bbb6'}
         self.cves = []
         if delete_existing:
             Vulnerability.objects.all().delete()
@@ -26,7 +28,7 @@ class NVDClient:
 
     def _fetch_vulnerabilities(self, start_index=0, retries=3, delay=5):
         url = f"{self.api_url}&startIndex={start_index}"
-        print(f"Fetching URL: {url}")
+        print(f"Fetching URL: {'https://services.nvd.nist.gov/rest/json/cves/2.0'}")
         for attempt in range(retries):
             try:
                 response = requests.get(url, headers=self.header)
@@ -121,6 +123,14 @@ def _get_cve_configurations(self, cve_item):
                             vendor_products.append((vendor, product))
     return vendor_products
 
+
+    attack_vector = None
+    if 'cvssMetricV31' in metrics:
+        attack_vector = metrics['cvssMetricV31'][0]['cvssData']['attackVector']
+    elif 'cvssMetricV2' in metrics:
+        attack_vector = metrics['cvssMetricV2'][0]['cvssData']['accessVector']
+
+    return attack_vector
 
 # Usage example
 if __name__ == "__main__":

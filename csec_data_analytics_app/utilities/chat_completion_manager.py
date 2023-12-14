@@ -9,8 +9,8 @@ from csec_data_analytics_app.models import Vulnerability, VulnerabilityImpact
 
 class ChatCompletionManager:
     def __init__(self):
-        self.client = OpenAI()
-        self.client.api_key = os.environ.get('OPENAI_API_KEY')
+        self.api_key = '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'
+        self.client = OpenAI(api_key=self.api_key)
         self.model = "gpt-4-1106-preview"
         self.response_format = ResponseFormat(type="json_object")
         self.FEATURE_KEY = "impact_type"
