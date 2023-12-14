@@ -4,6 +4,7 @@ from csec_data_analytics_app.models import User, UserAddress
 
 
 class Command(BaseCommand):
+    # Your code for the Command class here
     help = 'Creates many documents in the MongoDB database.'
 
     def handle(self, *args, **kwargs):

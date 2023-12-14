@@ -72,6 +72,8 @@ class Configuration(EmbeddedDocument):
    nodes = ListField(DictField())
 
 class Vulnerability(Document):
+   extracted_feature = StringField()
+   is_validated = BooleanField(default=False)
    cve_id = StringField(required=True, null=False)
    description = StringField(required=True, null=False)
    attack_vector = StringField(required=True, null=False)
